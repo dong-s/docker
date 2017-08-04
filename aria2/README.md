@@ -3,7 +3,6 @@
 
 ```bash
 
-docker run -d -it  -p 6800:6800 -v /tmp/data:/data dong-s/aria
-
+docker run -d -p 6800:6800 -v /your_download_path:/data d0ng/aria2
 
 ```

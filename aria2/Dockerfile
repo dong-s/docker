@@ -6,4 +6,4 @@ VOLUME /data
 
 EXPOSE 6800
 
-CMD ["aria2c", "--dir=/data", "--enable-rpc", "--rpc-listen-all=true", "--rpc-allow-origin-all"]
+CMD ["aria2c", "--dir=/data", "--enable-rpc", "--rpc-listen-all=true", "--rpc-allow-origin-all", "--continue=true"]
