@@ -2,6 +2,9 @@ FROM jenkins
 
 USER root
 
+RUN echo "Asia/Shanghai" > /etc/timezone && \
+    dpkg-reconfigure -f noninteractive tzdata
+
 RUN apt-get update && \
     curl -sL https://deb.nodesource.com/setup_6.x | bash - && \
     apt-get install -y nodejs
