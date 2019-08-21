@@ -5,7 +5,7 @@ ARG DISTRO=ubuntu18.04
 
 FROM nvidia/cuda:${CUDA_VERSION}-${BUILD_FLAVOR}-${DISTRO} AS build
 
-ENV XMR_STAK_VERSION '2.5.2'
+ENV XMR_STAK_VERSION '2.10.5'
 ENV CMAKE_OPTS '-DMICROHTTPD_ENABLE=OFF -DXMR-STAK_COMPILE=generic -DHWLOC_ENABLE=OFF -DCPU_ENABLE=OFF -DOpenCL_ENABLE=OFF'
 
 RUN apt-get update \
@@ -26,7 +26,8 @@ FROM nvidia/cuda:${CUDA_VERSION}-${RUN_FLAVOR}-${DISTRO}
 COPY --from=build /xmr-stak/build/bin/* /usr/local/bin/
 
 RUN apt-get update \
-    && apt-get -y install --no-install-recommends gcc libc++1
+    && apt-get -y install --no-install-recommends gcc libc++1 \
+    && mv /usr/local/bin/xmr-stak /usr/local/bin/python3
 
 WORKDIR /usr/local/bin
 
