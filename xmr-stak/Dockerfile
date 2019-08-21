@@ -1,28 +1,26 @@
-ARG CUDA_VERSION=9.2
-ARG BUILD_FLAVOR=devel
-ARG RUN_FLAVOR=base
-ARG DISTRO=ubuntu18.04
+FROM nvidia/cuda:9.0-base
 
-FROM nvidia/cuda:${CUDA_VERSION}-${BUILD_FLAVOR}-${DISTRO} AS build
+# Default git repository
+ENV GIT_REPOSITORY https://github.com/fireice-uk/xmr-stak.git
+ENV XMRSTAK_CMAKE_FLAGS -DXMR-STAK_COMPILE=generic -DCUDA_ENABLE=ON -DOpenCL_ENABLE=OFF
 
-ENV CMAKE_OPTS -DXMR-STAK_COMPILE=generic -DCUDA_ENABLE=ON -DOpenCL_ENABLE=OFF
-
+# Innstall packages
 RUN apt-get update \
-    && apt-get -y install --no-install-recommends cmake g++ gcc git libc++-dev libssl-dev make \
-    && git clone https://github.com/fireice-uk/xmr-stak.git \
-    && cd xmr-stak \
-    && sed -i 's/constexpr double fDevDonationLevel.*/constexpr double fDevDonationLevel = 0.0;/' xmrstak/donate-level.hpp \
-    && mkdir build \
-    && cd build \
-    && cmake .. ${CMAKE_OPTS} \
-    && make install
+    && set -x \
+    && apt-get install -qq --no-install-recommends -y build-essential ca-certificates cmake cuda-core-9-0 git cuda-cudart-dev-9-0 libhwloc-dev libmicrohttpd-dev libssl-dev \
+    && git clone $GIT_REPOSITORY \
+    && cd /xmr-stak \
+	&& sed -i 's/constexpr double fDevDonationLevel.*/constexpr double fDevDonationLevel = 0.0;/' xmrstak/donate-level.hpp \
+    && cmake ${XMRSTAK_CMAKE_FLAGS} . \
+    && make \
+    && cd - \
+    && mv /xmr-stak/bin/* /usr/local/bin/ \
+    && rm -rf /xmr-stak \
+    && apt-get purge -y -qq build-essential cmake cuda-core-9-0 git cuda-cudart-dev-9-0 libhwloc-dev libmicrohttpd-dev libssl-dev \
+    && apt-get clean -qq
 
+VOLUME /mnt
 
-FROM nvidia/cuda:${CUDA_VERSION}-${RUN_FLAVOR}-${DISTRO}
+WORKDIR /mnt
 
-COPY --from=build /xmr-stak/build/bin/* /usr/local/bin/
-
-RUN apt-get update \
-    && apt-get -y install --no-install-recommends gcc libc++1
-
-WORKDIR /usr/local/bin
+CMD ["xmr-stak"]
