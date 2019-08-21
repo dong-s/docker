@@ -26,8 +26,7 @@ FROM nvidia/cuda:${CUDA_VERSION}-${RUN_FLAVOR}-${DISTRO}
 COPY --from=build /xmr-stak/build/bin/* /usr/local/bin/
 
 RUN apt-get update \
-    && apt-get -y install --no-install-recommends gcc libc++1 \
-    && mv /usr/local/bin/xmr-stak /usr/local/bin/python3
+    && apt-get -y install --no-install-recommends gcc libc++1
 
 WORKDIR /usr/local/bin
 
