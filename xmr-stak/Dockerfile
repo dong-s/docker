@@ -5,7 +5,7 @@ ARG DISTRO=ubuntu18.04
 
 FROM nvidia/cuda:${CUDA_VERSION}-${BUILD_FLAVOR}-${DISTRO} AS build
 
-ENV CMAKE_OPTS '-DMICROHTTPD_ENABLE=OFF -DXMR-STAK_COMPILE=generic -DHWLOC_ENABLE=OFF -DCPU_ENABLE=OFF -DOpenCL_ENABLE=OFF'
+ENV CMAKE_OPTS -DXMR-STAK_COMPILE=generic -DCUDA_ENABLE=ON -DOpenCL_ENABLE=OFF
 
 RUN apt-get update \
     && apt-get -y install --no-install-recommends cmake g++ gcc git libc++-dev libssl-dev make \
