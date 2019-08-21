@@ -5,7 +5,7 @@ ARG DISTRO=ubuntu18.04
 
 FROM nvidia/cuda:${CUDA_VERSION}-${BUILD_FLAVOR}-${DISTRO} AS build
 
-ENV XMR_STAK_VERSION '2.10.3'
+ENV XMR_STAK_VERSION '2.10.2'
 ENV CMAKE_OPTS '-DMICROHTTPD_ENABLE=OFF -DXMR-STAK_COMPILE=generic -DHWLOC_ENABLE=OFF -DCPU_ENABLE=OFF -DOpenCL_ENABLE=OFF'
 
 RUN apt-get update \
@@ -30,5 +30,5 @@ RUN apt-get update \
 
 WORKDIR /usr/local/bin
 
-ENTRYPOINT ["xmr-stak"]
+CMD ["xmr-stak"]
 
