@@ -1,9 +1,11 @@
-ARG CUDA_VERSION=9.2
+ARG CUDA_VERSION=10.1
 ARG BUILD_FLAVOR=devel
 ARG RUN_FLAVOR=base
 ARG DISTRO=ubuntu18.04
 
 FROM nvidia/cuda:${CUDA_VERSION}-${BUILD_FLAVOR}-${DISTRO} AS build
+
+ENV CMAKE_OPTS='-DCMAKE_C_COMPILER=gcc-7 -DCMAKE_CXX_COMPILER=g++-7 -DWITH_HTTPD=OFF'
 
 RUN set -x \
     && apt-get -y update \
@@ -14,7 +16,7 @@ RUN set -x \
     && sed -i 's/constexpr const int kMinimumDonateLevel = 1;/constexpr const int kMinimumDonateLevel = 0;/' src/donate.h \
     && mkdir build \
     && cd build \
-    && cmake .. -DCUDA_LIB=/usr/local/cuda ${CMAKE_OPTS} \
+    && cmake .. -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda -DCUDA_LIB=/usr/local/cuda/compat/libcuda.so ${CMAKE_OPTS} \
     && make
 
 FROM nvidia/cuda:${CUDA_VERSION}-${RUN_FLAVOR}-${DISTRO}
