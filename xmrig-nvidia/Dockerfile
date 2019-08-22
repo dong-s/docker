@@ -14,7 +14,7 @@ RUN set -x \
     && sed -i 's/constexpr const int kMinimumDonateLevel = 1;/constexpr const int kMinimumDonateLevel = 0;/' src/donate.h \
     && mkdir build \
     && cd build \
-    && cmake .. \
+    && cmake .. -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda ${CMAKE_OPTS} \
     && make
 
 FROM nvidia/cuda:${CUDA_VERSION}-${RUN_FLAVOR}-${DISTRO}
