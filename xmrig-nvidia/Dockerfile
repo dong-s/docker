@@ -11,5 +11,5 @@ RUN set -x \
     && sed -i 's/constexpr const int kMinimumDonateLevel = 1;/constexpr const int kMinimumDonateLevel = 0;/' src/donate.h \
     && mkdir build \
     && cd build \
-    && cmake .. -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda -DCUDA_LIB=/usr/local/cuda/compat/libcuda.so ${CMAKE_OPTS} \
+    && cmake .. -DCUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda -DCUDA_LIB=/usr/local/cuda-9.2/targets/x86_64-linux/lib/stubs/libcuda.so ${CMAKE_OPTS} \
     && make
