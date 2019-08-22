@@ -8,7 +8,6 @@ FROM nvidia/cuda:${CUDA_VERSION}-${BUILD_FLAVOR}-${DISTRO} AS build
 ENV CMAKE_OPTS='-DCMAKE_C_COMPILER=gcc-7 -DCMAKE_CXX_COMPILER=g++-7 -DWITH_AEON=OFF -DWITH_HTTPD=OFF'
 
 RUN apt-get -y update \
-    && apt-get -y upgrade \
     && apt-get -y install git build-essential cmake libuv1-dev libmicrohttpd-dev libssl-dev \
     && git clone https://github.com/xmrig/xmrig-nvidia.git \
     && cd xmrig-nvidia \
