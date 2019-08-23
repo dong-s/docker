@@ -7,7 +7,8 @@ FROM nvidia/cuda:${CUDA_VERSION}-${BUILD_FLAVOR}-${DISTRO} AS build
 
 ENV CMAKE_OPTS '-DMICROHTTPD_ENABLE=OFF -DXMR-STAK_COMPILE=generic -DHWLOC_ENABLE=ON -DCPU_ENABLE=ON -DOpenCL_ENABLE=OFF'
 
-RUN apt-get update \
+RUN set -x \
+    && apt-get update \
     && apt-get -y install --no-install-recommends cmake g++ gcc git libc++-dev libssl-dev make libhwloc-dev\
     && git clone https://github.com/fireice-uk/xmr-stak.git \
     && cd xmr-stak \
@@ -16,7 +17,6 @@ RUN apt-get update \
     && cd build \
     && cmake .. ${CMAKE_OPTS} \
     && make install
-
 
 FROM nvidia/cuda:${CUDA_VERSION}-${RUN_FLAVOR}-${DISTRO}
 
@@ -28,4 +28,3 @@ RUN apt-get update \
 WORKDIR /usr/local/bin
 
 CMD ["xmr-stak"]
-
