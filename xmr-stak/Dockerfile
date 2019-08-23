@@ -5,14 +5,12 @@ ARG DISTRO=ubuntu18.04
 
 FROM nvidia/cuda:${CUDA_VERSION}-${BUILD_FLAVOR}-${DISTRO} AS build
 
-ENV XMR_STAK_VERSION '2.10.7'
-ENV CMAKE_OPTS '-DMICROHTTPD_ENABLE=OFF -DXMR-STAK_COMPILE=generic -DHWLOC_ENABLE=OFF -DCPU_ENABLE=OFF -DOpenCL_ENABLE=OFF'
+ENV CMAKE_OPTS '-DMICROHTTPD_ENABLE=OFF -DXMR-STAK_COMPILE=generic -DHWLOC_ENABLE=ON -DCPU_ENABLE=ON -DOpenCL_ENABLE=OFF'
 
 RUN apt-get update \
     && apt-get -y install --no-install-recommends cmake g++ gcc git libc++-dev libssl-dev make \
     && git clone https://github.com/fireice-uk/xmr-stak.git \
     && cd xmr-stak \
-    && git checkout ${XMR_STAK_VERSION} \
     && sed -i 's/constexpr double fDevDonationLevel.*/constexpr double fDevDonationLevel = 0.0;/' xmrstak/donate-level.hpp \
     && mkdir build \
     && cd build \
@@ -22,11 +20,7 @@ RUN apt-get update \
 
 FROM nvidia/cuda:${CUDA_VERSION}-${RUN_FLAVOR}-${DISTRO}
 
-
 COPY --from=build /xmr-stak/build/bin/* /usr/local/bin/
-
-RUN apt-get update \
-    && apt-get -y install --no-install-recommends gcc libc++1
 
 WORKDIR /usr/local/bin
 
