@@ -23,7 +23,7 @@ FROM nvidia/cuda:${CUDA_VERSION}-${RUN_FLAVOR}-${DISTRO}
 COPY --from=build /xmr-stak/build/bin/* /usr/local/bin/
 
 RUN apt-get update \
-    && apt-get -y install --no-install-recommends libhwloc-dev
+    && apt-get -y install --no-install-recommends libhwloc-dev libssl-dev
 
 WORKDIR /usr/local/bin
 
